@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+
+{% block body %} 
+
+ 
+    
+    <div class="bradcam_area bradcam_bg_1">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="bradcam_text">
+                        <h3>{{book}}</h3>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="job_details_area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="job_details_header">
+                        <div class="single_jobs white-bg d-flex justify-content-between">
+                            <div class="jobs_left d-flex align-items-center">
+                                <div class="thumb" style='margin: 10px;padding: 0;'>
+                                    <img src="{{ book.bookImage.url }}" alt="" style='width:80px;height:80px;border-radius: 5px;'>
+                                </div>
+                                <div class="jobs_conetent">
+                                    <h4>{{book|slice:'0:3'}}</h4>
+                                    <div class="links_locat d-flex align-items-center">
+                                   
+                                        <div class="location">
+                                            <p> <i class="fa fa-clock-o"></i>{{book.publisher}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="jobs_right">
+                                <div class="apply_now">
+{% if request.user.is_authenticated %}
+                                    {% if request.user in book.bookLike.all %}
+                                            <div class="apply_now">
+                                            {% if book.bookLike.count > 1 %}
+<form action="{% url 'books:like' book.slug %}" method="POST" class="like-form">
+    {% csrf_token %}
+    <button id='btnx'  type="submit" value='{{book.slug}}' class="like-btn fa fa-heart" 
+    style="border-style: none; color: #00D363;background-color:white;cursor: pointer;">
+<p id="pp" style="color: #00D363;">You And  {{tota}}</p>    
+</button>
+    </form>
+
+                                            {% else %}
+                                            <form action="{% url 'books:like' book.slug %}" method="POST" class="like-form">
+                                                {% csrf_token %}
+                                                <button id='btnx'  type="submit" value='{{book.slug}}' class="like-btn fa fa-heart" 
+                                                style="border-style: none; color: #00D363;background-color:white;cursor: pointer;">
+                                                <p id="pp" style="color: #00D363;">You</p>
+                                            </button>
+                                                </form>
+                                            {% endif %}
+                                            </div>
+                                    {% else %}
+                                
+                                        <div class="apply_now">
+         <form action="{% url 'books:like' book.slug %}" method="POST" class="like-form">
+              {% csrf_token %}
+             <button id='btnx' type="submit" value='{{book.slug}}' class="like-btn fa fa-heart" 
+             style="border-style: none; color: #AAB1B7;background-color:white;cursor: pointer;">
+             <p id="pp" >{{book.bookLike.count}}</p></button>
+             </form>
+
+                                        </div>
+                                    {% endif %}
+    {% else %}
+               
+                <div class="apply_now"> 
+                    <p> <i class="fa fa-heart" style="color:#AAB1B7;"></i> {{book.bookLike.count}}</p>
+                
+                </div>
+ {% endif %}
+
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="descript_wrap white-bg">
+                        <div class="single_wrap">
+                            <h4>Book Title</h4>
+                            <p>{{book.bookTitle}}</p>
+                        </div>
+                    </div>
+                    {% if request.user.is_authenticated %}
+                    <div class="apply_job_form white-bg">
+                        <h4>Download This Book</h4>
+                        <form method="POST" enctype="multipart/form-data">
+
+                                
+                                <button class="boxed-btn3 w-100" type="submit">Download Now</button>
+                            
+                        </form>
+                    </div>
+                   
+                    <div class="apply_job_form white-bg">
+                        <h4></h4>
+
+                        <form method="POST" enctype="multipart/form-data">
+
+                                
+                                <button class="boxed-btn3 w-100" type="submit">Comment</button>
+                            
+                        </form>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-lg-4">
+                    <div class="job_sumary">
+                        <div class="summery_header">
+                            <h3>Book Descrption</h3>
+                        </div>
+                        <div class="job_content">
+                            <ul>
+                                <li>Published on: <span>{{book.craeted_date|date:'d M Y'}}</span></li>
+                                
+                                
+                                <li>Location: <span>Syria, lattakia</span></li>
+                                
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="share_wrap d-flex">
+                        <span>Share at:</span>
+                        <ul>
+                            <li><a href="#"> <i class="fa fa-facebook"></i></a> </li>
+                            <li><a href="#"> <i class="fa fa-google-plus"></i></a> </li>
+
+                        </ul>
+                    </div>
+                    <div class="job_location_wrap">
+                        <div class="job_lok_inner">
+                            <div id="map" style="height: 200px;"></div>
+
+    
+                            <script>
+                              function initMap() {
+                                var uluru = {lat: -25.363, lng: 131.044};
+                                var grayStyles = [
+                                  {
+                                    featureType: "all",
+                                    stylers: [
+                                      { saturation: -90 },
+                                      { lightness: 50 }
+                                    ]
+                                  },
+                                  {elementType: 'labels.text.fill', stylers: [{color: '#ccdee9'}]}
+                                ];
+                                var map = new google.maps.Map(document.getElementById('map'), {
+                                  center: {lat: -31.197, lng: 150.744},
+                                  zoom: 9,
+                                  styles: grayStyles,
+                                  scrollwheel:  false
+                                });
+                              }
+                              
+                            </script>
+                            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpfS1oRGreGSBU5HHjMmQ3o5NLw7VdJ6I&callback=initMap"></script>
+                            
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    {% endblock body %}
+    
+    {% block script %}
+
+<script>
+    $(document).ready(function(e){
+    $('.like-form').submit(function(e){
+        e.preventDefault();
+        const bookslug = $('.like-btn').val();
+        const btn = $('.like-btn');
+        const token = $('input[name=csrfmiddlewaretoken]').val()
+        const url =$(this).attr('action');
+        const pargh = document.getElementById('pp');
+        
+        $.ajax({
+            method:'POST',
+            url:url,
+            headers:{'X-CSRFToken':token},
+            data:{
+                'slug':bookslug
+
+            },
+            success:function(response){
+                
+                if(response.is_like)
+            {
+                
+                btn.css('color','#00D363');
+                if(response.tx ==1)
+                {
+                    pargh.innerHTML='You';
+                pargh.style.color='#00D363';
+
+                }
+                else
+                {
+                pargh.innerHTML='You And ' + (parseInt(response.tx)-1);
+                pargh.style.color='#00D363';
+                }
+            }
+            else
+            {
+                btn.css('color','#AAB1B7');
+                pargh.innerText= response.tx;
+                pargh.style.color='#AAB1B7';
+            }
+
+            },
+            error:function(rs){
+
+                console.log('faild',rs);
+            },
+        });
+    
+    
+    
+    
+    
+    
+    
+    });});
+
+
+
+
+
+</script>
+
+    {% endblock script %}
+ 
